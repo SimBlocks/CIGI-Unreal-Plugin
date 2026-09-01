@@ -1,0 +1,41 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "2026.1",
+	"FriendlyName": "UnrealCigi_Plugin",
+	"Description": "Enables Unreal Engine to act as an image generator for CIGI compatibility.",
+	"Category": "Other",
+	"CreatedBy": "SimBlocks LLC",
+	"CreatedByURL": "https://www.simblocks.io/",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+ "PlatformAllowList": [
+		"Win64"
+	],
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "UnrealCigi_Plugin",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "CelestialVault",
+			"Enabled": true
+		},
+		{
+			"Name": "DaySequence",
+			"Enabled": true
+		},
+		{
+			"Name": "GeoReferencing",
+			"Enabled": true
+		}
+	]
+}

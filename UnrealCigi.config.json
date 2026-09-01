@@ -1,0 +1,210 @@
+{
+  "TestingWithProjectLauncher": false,
+  "cigiVersion": "4.0",
+  "synchronizationMode": "Asynchronous",
+  "imageGeneratorID": 0,
+  "viewID": 0,
+  "databaseControl": "Host",
+  "defaultIGControlledDatabaseID": 2,
+
+  "hosts": [
+    {
+      "hostIP": "127.0.0.1",
+      "hostToIgPort": 5001,
+      "igToHostPort": 5000
+    }
+  ],
+
+  "databases": [
+    {
+      "databaseID": 1,
+      "filepath": "Cigi/CigiDatabases_Levels/CIGI_Default",
+      "lat": 40.7,
+      "lon": -74.1,
+      "alt": 10
+    },
+    {
+      "databaseID": 2,
+      "filepath": "Cigi/CigiDatabases_Levels/TestTerrain",
+      "lat": 0,
+      "lon": 0,
+      "alt": 10
+    },
+    {
+      "databaseID": 3,
+      "filepath": "Cigi/CigiDatabases_Levels/TestTerrain3",
+      "lat": 41.0,
+      "lon": -74.0,
+      "alt": 50
+    }
+  ],
+  "fonts": [
+    {
+      "fontID": 1,
+      "name": "Roboto"
+    },
+    {
+      "fontID": 2,
+      "name": "TinyFont"
+    }
+  ],
+ "symbolTextures": [],
+
+  "entities": [
+    {
+      "name": "Empty Entity",
+      "sisoID": "0.0.0.0.0.0.0",
+      "filepath": "none"
+    },
+   {
+      "name": "Camera Rig Empty Entity",
+      "sisoID": "0.0.0.0.0.9.0",
+      "filepath": "none"
+    },
+    {
+      "name": "Generic Missile 1",
+      "sisoID": "2.1.225.1.1.3.1",
+      "shortEntityTypeID": "130",
+      "filepath": "Imports/Generic_Fighter/generic_missile_v4_highpoly_smooth_single_mesh/StaticMeshes/generic_missile_v4_highpoly_smooth_single_mesh.generic_missile_v4_highpoly_smooth_single_mesh",
+      "rotation": [ -90, 0, 180 ]
+    },
+    {
+      "name": "Generic Missile 2",
+      "sisoID": "2.1.225.1.13.2.0",
+      "shortEntityTypeID": "131",
+      "filepath": "Imports/Generic_Fighter/generic_missile_v4_highpoly_smooth_single_mesh/StaticMeshes/generic_missile_v4_highpoly_smooth_single_mesh.generic_missile_v4_highpoly_smooth_single_mesh",
+      "rotation": [ -90, 0, 180 ]
+    },
+    {
+      "name": "Generic Fighter Aircraft",
+      "sisoID": "1.2.225.1.5.3.0",
+      "shortEntityTypeID": "121",
+      "filepath": "Imports/Generic_Fighter/generic_aircraft_v2_unreal_single_skeletal/SkeletalMeshes/generic_aircraft_v2_unreal_single_skeletal.generic_aircraft_v2_unreal_single_skeletal",
+      "rotation": [ -90, 0, 180 ],
+      "scale": [ 2, 2, 2 ],
+      "articulatedBones": [
+        {
+          "name": "_wing_l",
+          "boneID": 1
+        },
+        {
+          "name": "_wing_r",
+          "boneID": 2
+        },
+        {
+          "name": "_yaw_l",
+          "boneID": 3
+        },
+        {
+          "name": "_yaw_r",
+          "boneID": 4
+        }
+      ]
+    },
+    {
+      "name": "Generic Fighter Aircraft Variant",
+      "sisoID": "1.2.225.1.6.1.0",
+      "filepath": "Imports/Generic_Fighter/generic_aircraft_v2_unreal_single_skeletal/SkeletalMeshes/generic_aircraft_v2_unreal_single_skeletal.generic_aircraft_v2_unreal_single_skeletal",
+      "rotation": [ 0, 0, 0 ],
+      "articulatedBones": [
+        {
+          "name": "_wing_l",
+          "boneID": 1
+        },
+        {
+          "name": "_wing_r",
+          "boneID": 2
+        },
+        {
+          "name": "_yaw_l",
+          "boneID": 3
+        },
+        {
+          "name": "_yaw_r",
+          "boneID": 4
+        }
+      ]
+    },
+    {
+      "name": "testCubeSimple",
+      "sisoID": "0.0.0.0.0.1.1",
+      "filepath": "Imports/TestImports/StaticMeshes/TestCube"
+    }
+  ],
+
+  "symbolTemplates": [
+    {
+      "templateID": 710,
+      "symbol": "circle",
+      "drawingStyle": "line",
+      "lineWidth": 5,
+      "stipple": 7967,
+      "stippleLength": 10,
+      "shapes": [
+        {
+          "centerU": 0,
+          "centerV": 0,
+          "radius": 30,
+          "innerRadius": 10,
+          "startAngle": 90,
+          "endAngle": 270
+        }
+      ]
+    },
+    {
+      "templateID": 711,
+      "symbol": "circle",
+      "drawingStyle": "fill",
+      "shapes": [
+        {
+          "centerU": 0,
+          "centerV": 0,
+          "radius": 30,
+          "innerRadius": 10,
+          "startAngle": 90,
+          "endAngle": 270
+        }
+      ]
+    },
+    {
+      "templateID": 720,
+      "symbol": "polygon",
+      "primitiveType": "line",
+      "lineWidth": 5,
+      "stipple": 7967,
+      "stippleLength": 10,
+      "shapes": [
+        {
+          "vertexU": 10,
+          "vertexV": 5
+        },
+        {
+          "vertexU": 90,
+          "vertexV": 50
+        }
+      ]
+    },
+    {
+      "templateID": 721,
+      "symbol": "polygon",
+      "primitiveType": "triangle",
+      "shapes": [
+        {
+          "vertexU": -10,
+          "vertexV": -20,
+          "radius": 10
+        },
+        {
+          "vertexU": -10,
+          "vertexV": 30,
+          "radius": 10
+        },
+        {
+          "vertexU": 70,
+          "vertexV": -20,
+          "radius": 10
+        }
+      ]
+    }
+  ]
+}
