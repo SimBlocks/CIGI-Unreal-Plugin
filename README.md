@@ -1,6 +1,6 @@
 SETTING UP THE REPOSITORY 
 
-1. Clone the CIGI-Unreal-Plugin repository
+1. Clone the CIGI-Unreal-Plugin repository  
 **It is recommended to clone from the https://github.com/SimBlocks/CIGI repository in order to have the simulationsdk and thirdparty dependencies setup for the CIGI-Unreal-Plugin to build.**
 
 2. Navigate to the CIGI-Unreal-Plugin folder in File Explorer.
