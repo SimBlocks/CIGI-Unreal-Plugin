@@ -1,3 +1,11 @@
+# Introduction
+
+The CIGI SDK for Unreal is a software plugin designed to enable interoperability between CIGI-compliant host systems and the Unreal game engine. CIGI is a widely used communication interoperability standard in the simulation industry and is supported by a variety of Computer Generated Forces (CGF), Semi-Automated Forces (SAF), and image generation (IG) applications, however CIGI is not typically supported by modern game engines. SimBlocks.io has developed the CIGI SDK for Unreal to allow developers to leverage existing simulation applications and communication interoperability standards when using Unreal Engine to build immersive applications. Note that the CIGI SDK for Unreal primarily provides a software integration where the intention is for the user to combine the SDK with their Unreal assets.
+
+There are two main versions of CIGI in use today (v3.3 and v4.0), and our SDK is compatible with both versions. Version 4.0 has been approved by the Simulation Interoperability Standards Organization (SISO). 
+
+A CIGI-compliant host is required for testing. The SimBlocks.io CIGI Host Emulator is available with this release package with many example scripts to get started. 
+
 # Setting Up the Repository
 
 1. Clone the CIGI-Unreal-Plugin repository  
@@ -35,3 +43,12 @@
 4. On the Host Emulator Script tab, click the **Stop Script** button.
 
 5. Feel free to test other scripts in the Host Emulator.
+
+# Support
+
+For feature requests and to report issues for this product, please utilize the GitHub Issues page.
+
+For more customized software support or Unreal application development, please reach out to our team at sales@simblocks.io
+
+For general CIGI questions, please contact the CIGI Product Support Group at https://sisostandards.connectedcommunity.org/home
+
