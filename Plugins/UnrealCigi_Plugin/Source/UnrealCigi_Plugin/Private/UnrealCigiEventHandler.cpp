@@ -44,6 +44,9 @@
 #include "EngineLib/ImageGeneratorMessages.h"
 #include "ViewLib/View.h"
 #include "ViewLib/ViewManager.h"
+#include "ViewLib/ViewLib.h"
+#include "EntityLib/EntityManager.h"
+#include "SymbolLib/SymbolSurfaceManager.h"
 #include "IGCigiLib/IGCigiLib.h"
 #include "IGCigiLib/CigiView.h"
 #include "IGCigiLib/CigiViewGroup.h"
@@ -110,6 +113,29 @@ void CUnrealCigiEventHandler::Initialize(UWorld* world)
   FUnrealCigi_PluginModule::globals.pUnrealSymbolManager->ClearSurfaces();
   FUnrealCigi_PluginModule::globals.pUnrealSymbolManager->ClearTextures();
   FUnrealCigi_PluginModule::globals.pUnrealSymbolManager->ClearRenderCaches();
+
+  if (m_bWorldInitialized)
+  {
+    auto& globals = FUnrealCigi_PluginModule::globals;
+    globals.pEntityManager->Reset();
+    globals.pSymbolSurfaceManager->ClearSymbols();
+    globals.pSymbolSurfaceManager->ClearSymbolSurfaces();
+
+    // The SDK view manager's Reset() retains views and groups, so replace it between play worlds.
+    auto previousViewManager = std::move(globals.pViewManager);
+    globals.pViewManager = std::make_shared<sbio::view::CViewManager>();
+    sbio::cigi::ig::SIGCigiLibParams cigiParams;
+    cigiParams.pEventMessenger = globals.pEventMessenger.get();
+    cigiParams.pEntityManager = globals.pEntityManager;
+    cigiParams.pSymbolSurfaceManager = globals.pSymbolSurfaceManager;
+    cigiParams.pViewManager = globals.pViewManager;
+    InitIGCigiLib(globals, cigiParams);
+    SetIGCigiLibImageGenerator(globals.pImageGenerator.get());
+
+    sbio::view::SViewLibParams viewLibParams;
+    viewLibParams.pViewManager = globals.pViewManager;
+    InitViewLib(globals, viewLibParams);
+  }
   m_World = nullptr;
 
   // If it is not specified later, the origin defaults to 0Â°N 0Â°E. Make sure this resets for each Initialize.
@@ -164,6 +190,7 @@ void CUnrealCigiEventHandler::Initialize(UWorld* world)
   {
     m_pDatabaseEventHandler->LoadDatabase(FUnrealCigi_PluginModule::globals.pImageGenerator->GetSetupOptions().defaultIGControlledDatabaseID.Value(), GetWorld(), *m_pCelestialEventHandler);
   }
+  m_bWorldInitialized = true;
 }
 
 void CUnrealCigiEventHandler::OnLevelAddedToWorld(ULevel* pLevel, UWorld* pWorld)
@@ -234,6 +261,11 @@ void CUnrealCigiEventHandler::OnSetEntityCollisionDetectionEnabledMessage(const 
 bool CUnrealCigiEventHandler::IsPointInEntityVolume(const sbio::math::GeocentricCoordinates& point, sbio::EntityID entityID) const
 {
   return m_pEntityEventHandler->IsPointInEntityVolume(point, entityID);
+}
+
+bool CUnrealCigiEventHandler::GetMotionTrackerPosition(sbio::MotionTrackerID trackerID, sbio::math::Vec3& offset, sbio::math::TBodyEulerRotation& rotation) const
+{
+  return false;
 }
 
 void CUnrealCigiEventHandler::OnLineOfSightSegmentRequestBasicMessage(const sbio::ig::terrain::SLineOfSightSegmentRequestBasicMessage& data)
@@ -336,6 +368,11 @@ void CUnrealCigiEventHandler::OnSetCameraUnattachedMessage(const sbio::ig::view:
   m_pViewEventHandler->OnSetCameraUnattachedMessage(data);
 }
 
+void CUnrealCigiEventHandler::OnBringCameraToTopMessage(const sbio::ig::view::SBringCameraToTopMessage& data)
+{
+  UE_LOG(LogCigiEventHandler, CIGI_WARNING, TEXT("OnBringCameraToTopMessage: Not currently supported"));
+}
+
 void CUnrealCigiEventHandler::OnSetCameraProjectionMessage(const sbio::ig::view::SSetCameraProjectionMessage& data)
 {
   m_pViewEventHandler->OnSetCameraProjectionMessage(data);
@@ -372,6 +409,11 @@ void CUnrealCigiEventHandler::OnSetAnimationLoopModeMessage(const sbio::ig::anim
 }
 
 void CUnrealCigiEventHandler::OnSetAnimationSpeedMessage(const sbio::ig::animation::SSetAnimationSpeedMessage& data)
+{
+  UE_LOG(LogCigiEventHandler, CIGI_WARNING, TEXT("Animations are not currently supported"));
+}
+
+void CUnrealCigiEventHandler::OnSetAnimationAlphaMessage(const sbio::ig::animation::SSetAnimationAlphaMessage& data)
 {
   UE_LOG(LogCigiEventHandler, CIGI_WARNING, TEXT("Animations are not currently supported"));
 }
@@ -504,6 +546,11 @@ void CUnrealCigiEventHandler::OnCreateSymbolSurfaceMessage(const sbio::ig::symbo
 void CUnrealCigiEventHandler::OnDestroySymbolSurfaceMessage(const sbio::ig::symbol::SDestroySymbolSurfaceMessage& data)
 {
   m_pSymbolEventHandler->OnDestroySymbolSurfaceMessage(data);
+}
+
+void CUnrealCigiEventHandler::OnClearSymbolSurfaceMessage(const sbio::ig::symbol::SClearSymbolSurfaceMessage& data)
+{
+  UE_LOG(LogCigiEventHandler, CIGI_WARNING, TEXT("OnClearSymbolSurfaceMessage: Not currently supported"));
 }
 
 void CUnrealCigiEventHandler::OnUpdateSymbolSurfaceMessage(const sbio::ig::symbol::SUpdateSymbolSurfaceMessage& data)

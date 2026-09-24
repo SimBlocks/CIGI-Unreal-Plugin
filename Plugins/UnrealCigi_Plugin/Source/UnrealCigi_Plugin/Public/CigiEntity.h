@@ -367,6 +367,8 @@ public:
    */
   bool DestroyCollisionVolume(sbio::VolumeID volID);
 
+  const TMap<int32, UShapeComponent*>& GetCollisionVolumes() const;
+
   /**
    * @brief Finds the collision volume for a given component.
    * @param volume Component to search for.

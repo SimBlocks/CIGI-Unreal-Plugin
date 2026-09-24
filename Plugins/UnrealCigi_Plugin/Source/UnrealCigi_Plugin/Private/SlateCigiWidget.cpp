@@ -191,19 +191,24 @@ int32 SSlateCigiWidget::OnPaint(const FPaintArgs& Args, const FGeometry& Allotte
       // Build the list of CIGI symbol transforms
       verts.Transforms.Add(VertexTransform(ToUnrealVector2D(currSymbol->GetPosition()), currSymbol->GetRotation().Value(), ToUnrealVector2D(currSymbol->GetScale())));
       // If there is a circular parent reference, make sure we do not get stuck in an infinite loop
-      SymbolID parentId = currSymbol->GetParentSymbolID();
-      if (usedParentIds.Contains(parentId))
+      const auto parentId = currSymbol->GetParentSymbolID();
+      if (!parentId.has_value())
+      {
+        break;
+      }
+
+      if (usedParentIds.Contains(*parentId))
       {
         currSymbol = nullptr;
         break;
       }
       else
       {
-        usedParentIds.Add(parentId);
+        usedParentIds.Add(*parentId);
         currSymbol = nullptr;
         if (FUnrealCigi_PluginModule::globals.pUnrealSymbolManager != nullptr)
         {
-          currSymbol = FUnrealCigi_PluginModule::globals.pUnrealSymbolManager->FindSymbol(parentId);
+          currSymbol = FUnrealCigi_PluginModule::globals.pUnrealSymbolManager->FindSymbol(*parentId);
         }
       }
     }
@@ -597,19 +602,24 @@ void SSlateCigiWidget::PaintText(sbio::symbol::CSymbol* symbol, SymbolID symbolI
            textRender.GetTranslation().X, textRender.GetTranslation().Y);
 
     // Resolve the parent and apply its scale to all previously accumulated child transforms.
-    SymbolID parentId = currSymbol->GetParentSymbolID();
-    if (usedParentIds.Contains(parentId))
+    const auto parentId = currSymbol->GetParentSymbolID();
+    if (!parentId.has_value())
+    {
+      break;
+    }
+
+    if (usedParentIds.Contains(*parentId))
     {
       currSymbol = nullptr;
       break;
     }
     else
     {
-      usedParentIds.Add(parentId);
+      usedParentIds.Add(*parentId);
       sbio::symbol::CSymbol* parentSymbol = nullptr;
       if (FUnrealCigi_PluginModule::globals.pUnrealSymbolManager != nullptr)
       {
-        parentSymbol = FUnrealCigi_PluginModule::globals.pUnrealSymbolManager->FindSymbol(parentId);
+        parentSymbol = FUnrealCigi_PluginModule::globals.pUnrealSymbolManager->FindSymbol(*parentId);
       }
       if (parentSymbol == nullptr)
       {

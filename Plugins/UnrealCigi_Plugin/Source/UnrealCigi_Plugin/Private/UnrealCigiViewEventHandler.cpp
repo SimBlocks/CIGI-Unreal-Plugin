@@ -175,7 +175,7 @@ namespace sbio
       }
       else
       {
-        playerController = UGameplayStatics::CreatePlayer(EventHandler.GetWorld(), FUnrealCigi_PluginModule::globals.pUnrealViewManager->PlayerControllerViewIDs.Num());
+        playerController = UGameplayStatics::CreatePlayer(EventHandler.GetWorld(), -1);
         if (!IsValid(playerController))
         {
           UE_LOG(LogCigiEventHandler, JSON_WARNING, TEXT("SetupViewActor: Failed to create Player Controller %d!"), viewID.Value());

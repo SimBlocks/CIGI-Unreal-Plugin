@@ -31,7 +31,7 @@ namespace sbio
         return nullptr;
       }
 
-      return *view;
+      return IsValid(*view) ? *view : nullptr;
     }
 
     void CUnrealCigiViewManager::Add(int32 viewID, ACigiView* view)
@@ -52,10 +52,10 @@ namespace sbio
       // Find the index of the player controller associated with the view ID
       const int32 playerControllerIndex = PlayerControllerIndex(viewID);
 
-      // If the view is associated with a player controller, reset the corresponding index in PlayerControllerViewIDs
+      // Removing a local player compacts Unreal's player-controller indices, so compact this mapping too
       if (playerControllerIndex >= 0 && playerControllerIndex < PlayerControllerViewIDs.Num())
       {
-        PlayerControllerViewIDs[playerControllerIndex] = -999;
+        PlayerControllerViewIDs.RemoveAt(playerControllerIndex);
       }
 
       // Remove the view from the Actors map

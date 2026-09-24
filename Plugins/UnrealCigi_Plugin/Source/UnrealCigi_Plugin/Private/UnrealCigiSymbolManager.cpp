@@ -207,9 +207,9 @@ namespace sbio
         // Iterate through all symbols in the symbol surface manager and reset the surface ID for any symbols that are associated with the specified surface ID.
         for (const auto& symbolPair : SymbolSurfaceManager->GetSymbols())
         {
-          if (symbolPair.second != nullptr && symbolPair.second->GetSymbolSurfaceID() == surfaceID)
+          if (symbolPair.second != nullptr && symbolPair.second->HasSymbolSurfaceID() && symbolPair.second->GetSymbolSurfaceID() == surfaceID)
           {
-            symbolPair.second->SetSymbolSurfaceID(sbio::symbol::UnknownSymbolSurfaceID);
+            symbolPair.second->ClearSymbolSurfaceID();
           }
         }
 
@@ -234,7 +234,7 @@ namespace sbio
       // Iterate through all symbols in the symbol surface manager and collect the IDs of symbols that are associated with the specified surface ID.
       for (const auto& symbolPair : SymbolSurfaceManager->GetSymbols())
       {
-        if (symbolPair.second != nullptr && symbolPair.second->GetSymbolSurfaceID() == surfaceID)
+        if (symbolPair.second != nullptr && symbolPair.second->HasSymbolSurfaceID() && symbolPair.second->GetSymbolSurfaceID() == surfaceID)
         {
           symbolIDs.Add(symbolPair.first);
         }

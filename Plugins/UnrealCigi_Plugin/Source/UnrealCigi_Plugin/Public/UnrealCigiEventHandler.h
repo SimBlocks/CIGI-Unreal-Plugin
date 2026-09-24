@@ -168,6 +168,8 @@ namespace sbio
        * @return True if the point is within the entity's volume, false otherwise.
        */
       virtual bool IsPointInEntityVolume(const sbio::math::GeocentricCoordinates& point, sbio::EntityID entityID) const override;
+
+      virtual bool GetMotionTrackerPosition(sbio::MotionTrackerID trackerID, sbio::math::Vec3& offset, sbio::math::TBodyEulerRotation& rotation) const override;
       
       /**
        * @brief Processes the corresponding CIGI message and updates the Unreal scene or simulation state.
@@ -287,6 +289,8 @@ namespace sbio
        * @param data Message payload supplied by the image-generator event dispatcher.
        */
       virtual void OnSetCameraUnattachedMessage(const sbio::ig::view::SSetCameraUnattachedMessage& data) override;
+
+      virtual void OnBringCameraToTopMessage(const sbio::ig::view::SBringCameraToTopMessage& data) override;
       
       /**
        * @brief Processes the corresponding CIGI message and updates the Unreal scene or simulation state.
@@ -334,6 +338,8 @@ namespace sbio
        * @param data Message payload supplied by the image-generator event dispatcher.
        */
       virtual void OnSetAnimationSpeedMessage(const sbio::ig::animation::SSetAnimationSpeedMessage& data) override;
+
+      virtual void OnSetAnimationAlphaMessage(const sbio::ig::animation::SSetAnimationAlphaMessage& data) override;
       
       /**
        * @brief Processes the corresponding CIGI message and updates the Unreal scene or simulation state.
@@ -526,6 +532,8 @@ namespace sbio
        * @param data Message payload supplied by the image-generator event dispatcher.
        */
       virtual void OnSetSymbolSurfaceMessage(const sbio::ig::symbol::SSetSymbolSurfaceMessage& data) override;
+
+      virtual void OnClearSymbolSurfaceMessage(const sbio::ig::symbol::SClearSymbolSurfaceMessage& data) override;
       
       /**
        * @brief Processes the corresponding CIGI message and updates the Unreal scene or simulation state.
@@ -725,6 +733,7 @@ namespace sbio
       std::unique_ptr<CUnrealCigiSystemEventHandler> m_pSystemEventHandler;
       /** @brief Pointer to the Unreal world, weak referenced. */
       TWeakObjectPtr<UWorld> m_World;
+      bool m_bWorldInitialized = false;
     };
   }
 }

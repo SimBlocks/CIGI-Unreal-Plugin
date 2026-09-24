@@ -5,6 +5,9 @@
 #include "UnrealCigiUtil.h"
 #include "CigiCoordinates.h"
 #include "Components/ShapeComponent.h"
+#include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/SphereComponent.h"
 
 namespace sbio
 {
@@ -127,15 +130,47 @@ namespace sbio
 
       // Convert the geocentric point to Unreal Engine coordinates
       const FVector enginePoint = CigiCoordinates::GeocentricToEngine(point).ToFVector();
-      TArray<UShapeComponent*> shapeComponents;
-      entity->GetComponents<UShapeComponent>(shapeComponents);
 
-      // Check if the point is inside any of the shape components
-      for (UShapeComponent* shapeComponent : shapeComponents)
+      // Check only enabled CIGI collision volumes, not other shapes on the actor
+      for (const TPair<int32, UShapeComponent*>& volume : entity->GetCollisionVolumes())
       {
-        if (IsValid(shapeComponent) && shapeComponent->Bounds.GetBox().IsInsideOrOn(enginePoint))
+        UShapeComponent* shapeComponent = volume.Value;
+        if (!IsValid(shapeComponent) || shapeComponent->GetCollisionEnabled() == ECollisionEnabled::NoCollision)
         {
-          return true;
+          continue;
+        }
+
+        if (const USphereComponent* sphere = Cast<USphereComponent>(shapeComponent))
+        {
+          const FVector componentPoint = sphere->GetComponentQuat().UnrotateVector(enginePoint - sphere->GetComponentLocation());
+          const float radius = sphere->GetScaledSphereRadius();
+          if (componentPoint.SizeSquared() <= FMath::Square(radius))
+          {
+            return true;
+          }
+        }
+        else if (const UBoxComponent* box = Cast<UBoxComponent>(shapeComponent))
+        {
+          const FVector localPoint = box->GetComponentTransform().InverseTransformPosition(enginePoint);
+          const FVector extent = box->GetUnscaledBoxExtent();
+          if (FMath::Abs(localPoint.X) <= extent.X && FMath::Abs(localPoint.Y) <= extent.Y && FMath::Abs(localPoint.Z) <= extent.Z)
+          {
+            return true;
+          }
+        }
+        else if (const UCapsuleComponent* capsule = Cast<UCapsuleComponent>(shapeComponent))
+        {
+          float radius;
+          float halfHeight;
+          capsule->GetScaledCapsuleSize(radius, halfHeight);
+          const FVector componentPoint = capsule->GetComponentQuat().UnrotateVector(enginePoint - capsule->GetComponentLocation());
+          const float segmentHalfLength = FMath::Max(0.0f, halfHeight - radius);
+          const float closestZ = FMath::Clamp(componentPoint.Z, -segmentHalfLength, segmentHalfLength);
+          const FVector closestPoint(0.0f, 0.0f, closestZ);
+          if (FVector::DistSquared(componentPoint, closestPoint) <= FMath::Square(radius))
+          {
+            return true;
+          }
         }
       }
 

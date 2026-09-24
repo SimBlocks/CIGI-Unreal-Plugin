@@ -967,6 +967,11 @@ bool ACigiEntity::DestroyCollisionVolume(VolumeID volID)
   return true;
 }
 
+const TMap<int32, UShapeComponent*>& ACigiEntity::GetCollisionVolumes() const
+{
+  return CollisionVolumes;
+}
+
 int32 ACigiEntity::FindCollisionVolume(UPrimitiveComponent* volume)
 {
   // If the given UPrimitiveComponent is null, return -1

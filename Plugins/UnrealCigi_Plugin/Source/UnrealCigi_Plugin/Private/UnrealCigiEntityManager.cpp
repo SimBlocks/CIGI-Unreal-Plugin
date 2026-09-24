@@ -202,7 +202,8 @@ namespace sbio
       {
         return nullptr;
       }
-      return *entity;
+
+      return IsValid(*entity) ? *entity : nullptr;
     }
 
     // Find the ID of an entity by its pointer. Returns UnknownEntityID if not found.

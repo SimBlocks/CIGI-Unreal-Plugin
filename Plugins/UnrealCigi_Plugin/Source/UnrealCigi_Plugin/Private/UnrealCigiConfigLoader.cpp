@@ -960,8 +960,14 @@ namespace sbio
 
         // Check if the config file exists in the current folder
         filePath = folder / TEXT("UnrealCigi.config.json");
-        if (FFileHelper::LoadFileToString(contents, *filePath))
+        if (IFileManager::Get().FileExists(*filePath))
         {
+          if (!FFileHelper::LoadFileToString(contents, *filePath))
+          {
+            UE_LOG(LogCigiEventHandler, Error, TEXT("JSON: Could not read config file '%s'"), *filePath);
+            return nullptr;
+          }
+
           TSharedPtr<FJsonObject> object = MakeShared<FJsonObject>();
           const TSharedRef<TJsonReader<>> reader = TJsonReaderFactory<>::Create(contents);
           if (FJsonSerializer::Deserialize(reader, object) && object.IsValid())
@@ -970,6 +976,7 @@ namespace sbio
             return object;
           }
           UE_LOG(LogCigiEventHandler, Error, TEXT("JSON: Could not parse config file '%s'"), *filePath);
+          return nullptr;
         }
 
         // Move up to the parent folder and try again

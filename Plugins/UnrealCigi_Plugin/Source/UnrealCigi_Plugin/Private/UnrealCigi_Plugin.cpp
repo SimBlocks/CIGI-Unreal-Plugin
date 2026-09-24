@@ -50,6 +50,7 @@ void* DLLPocoNet64;
 
 SUnrealCigiGlobals FUnrealCigi_PluginModule::globals = SUnrealCigiGlobals();
 bool FUnrealCigi_PluginModule::globalsInitialized = false;
+bool bDependenciesLoaded = false;
 
 const FString DEFAULT_HOST_IP = "127.0.0.1";
 const int DEFAULT_HOST_TO_IG_PORT = 5001;
@@ -326,6 +327,8 @@ static bool LoadJsonHost(sbio::cigi::ig::SIGSetupOptions& igSetupOptions, TShare
 // Override function to load the dlls
 void FUnrealCigi_PluginModule::StartupModule()
 {
+  bDependenciesLoaded = false;
+
   // Register a callback for engine pre-exit to release rooted UObjects before Unreal begins shutting down UObjects.
   EnginePreExitHandle = FCoreDelegates::OnEnginePreExit.AddRaw(this, &FUnrealCigi_PluginModule::HandleEnginePreExit);
 
@@ -364,7 +367,10 @@ void FUnrealCigi_PluginModule::StartupModule()
     DLLPocoFoundation64 = nullptr;
     DLLPocoJSON64 = nullptr;
     DLLPocoNet64 = nullptr;
+    return;
   }
+
+  bDependenciesLoaded = true;
 }
 
 void FUnrealCigi_PluginModule::HandleEnginePreExit()
@@ -404,10 +410,17 @@ void FUnrealCigi_PluginModule::ShutdownModule()
   DLLPocoFoundation64 = nullptr;
   DLLPocoJSON64 = nullptr;
   DLLPocoNet64 = nullptr;
+  bDependenciesLoaded = false;
 }
 
 void FUnrealCigi_PluginModule::StartIG()
 {
+  if (!DependenciesLoaded)
+  {
+    UE_LOG(LogCigiEventHandler, Error, TEXT("Cannot start CIGI image generator because SimulationSDK dependencies were not loaded."));
+    return;
+  }
+
   // Fist-time setup: Doing this more than once per UE Editor Window will cause crashes
   if (!globalsInitialized)
   {
